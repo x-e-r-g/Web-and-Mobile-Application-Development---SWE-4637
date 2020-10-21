@@ -36,6 +36,22 @@ const HomeScreen = (props) => {
                 }}
               />
             </View>
+            <View style={styles.buttonStyle}>
+              <Button
+                title="Storage"
+                onPress={function () {
+                  props.navigation.navigate("Storage");
+                }}
+              />
+            </View>
+            <View style={styles.buttonStyle}>
+              <Button
+                title="State"
+                onPress={function () {
+                  props.navigation.navigate("State");
+                }}
+              />
+            </View>
           </View>
         );
 }
