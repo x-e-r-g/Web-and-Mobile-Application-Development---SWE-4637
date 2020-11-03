@@ -1,42 +1,35 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import AuthStackScreen from "./src/navigation/AuthStack";
+import AppDrawerScreen from "./src/navigation/AppDrawer";
 
-import HomeScreen from "./src/screens/HomeScreen";
-import SignInScreen from "./src/screens/SignInScreen";
-import SignUpScreen from "./src/screens/SignUpScreen";
+import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
 
-import {AuthContext, AuthProvider} from './src/providers/AuthProvider'
+import * as firebase from "firebase";
 
-const HomeStack = createStackNavigator();
-const AuthStack = createStackNavigator();
-
-const HomeStackScreen = ()=>{
-  return(
-    <HomeStack.Navigator initialRouteName="Home">
-      <HomeStack.Screen name="Home" component={HomeScreen}/>
-    </HomeStack.Navigator>
-  );
+const firebaseConfig = {
+  apiKey: "AIzaSyCdJA1m9wMwIt2uu4S3apEvigFJe0QUjS4",
+  authDomain: "flogger-c4f88.firebaseapp.com",
+  databaseURL: "https://flogger-c4f88.firebaseio.com",
+  projectId: "flogger-c4f88",
+  storageBucket: "flogger-c4f88.appspot.com",
+  messagingSenderId: "271306697021",
+  appId: "1:271306697021:web:25584ea4d5c29f77b8fd54"
 };
 
-const AuthStackScreen = ()=>{
-  return(
-    <AuthStack.Navigator initialRouteName="SignIn">
-      <AuthStack.Screen name="SignIn" component={SignInScreen} options={{ headerShown:false }}/>
-      <AuthStack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown:false }}/>
-    </AuthStack.Navigator>
-  );
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
 }
 
-function App(){
-  return(
+function App() {
+  return (
     <AuthProvider>
       <AuthContext.Consumer>
-
-        {(auth)=>(<NavigationContainer>
-          {auth.IsLoggedIn?<HomeStackScreen/> : <AuthStackScreen/>}
-        </NavigationContainer>)}
-
+        {(auth) => (
+          <NavigationContainer>
+            {auth.IsLoggedIn ? <AppDrawerScreen /> : <AuthStackScreen />}
+          </NavigationContainer>
+        )}
       </AuthContext.Consumer>
     </AuthProvider>
   );
