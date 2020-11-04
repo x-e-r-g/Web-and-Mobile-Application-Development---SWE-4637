@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList} from "react-native";
-import { Card, Button, Text, Avatar, Input } from "react-native-elements";
+import { Card, Button, Text, Avatar, Input , Header} from "react-native-elements";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import { AuthContext} from "../providers/AuthProvider";
+import CommentCard from "../components/CommentCard";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const PostScreen = (props) => {
     let user = firebase.auth().currentUser;
@@ -42,6 +44,21 @@ const PostScreen = (props) => {
         });
     }
 
+    const deleteComment = async (item) => {
+        if(user.uid == Post.userId || user.uid == item.comment_poster_id){
+            firebase.firestore().collection('posts').doc(postId).update({
+                comments: firebase.firestore.FieldValue.arrayRemove(item)
+            }).then(() => {
+                alert("Comment deleted successfully");
+            }).catch((error) => {
+                alert(error);
+            });
+        }
+        else{
+            alert("You don't have the authority to delete this comment");
+        }
+    }
+
     useEffect(() => {
         loadPost(postId);
     }, []);
@@ -51,6 +68,12 @@ const PostScreen = (props) => {
         <AuthContext.Consumer>
             {(auth) => (
                 <View style={styles.viewStyle}>
+                    <Header
+                        containerStyle={{
+                        backgroundColor: '#1c1c1c',
+                        }}
+                        centerComponent={{ text: "Flogger", style: { color: "#fff", fontSize: 20 } }}
+                    />
                     <Card>
                         <View
                             style={{
@@ -59,9 +82,10 @@ const PostScreen = (props) => {
                             }}
                         >
                             <Avatar
-                                containerStyle={{ backgroundColor: "#ffab91" }}
+                                containerStyle={{ backgroundColor: '#1c1c1c' }}
                                 rounded
-                                icon={{ name: "user", type: "font-awesome", color: "black" }}
+                                size={45}
+                                icon={{ name: "user", type: "font-awesome", color: "white" }}
                                 activeOpacity={1}
                             />
                             <Text h4Style={{ padding: 10 }} h4>
@@ -69,7 +93,7 @@ const PostScreen = (props) => {
                             </Text>
                         </View>
                         <Text
-                            style={{
+                            style={{ fontSize: 18,
                                 paddingVertical: 10,
                             }}
                         >
@@ -86,22 +110,29 @@ const PostScreen = (props) => {
                             />
                         </View>
                         <Button type="solid" title="Post Comment"
+                        buttonStyle={{backgroundColor: '#1c1c1c'}}
                             onPress={function () {
                                 postComment(userid);
                             }}
                         />
-                        <FlatList
-                            data={allc}
-                            renderItem={({ item }) => {
-                                return (
+                    </Card>  
+                    <FlatList
+                        data={allc}
+                        renderItem={({ item }) => {
+                            return (
+                                <TouchableOpacity onLongPress={()=>{
+                                    deleteComment(item);
+                                }}>
                                     <View>
-                                        <Text>{item.commentor}</Text>
-                                        <Text>{item.comment_body}</Text>
+                                        <CommentCard
+                                            commentor={item.commentor}
+                                            comment={item.comment_body}
+                                        />
                                     </View>
-                                );
-                            }}
-                        />
-                    </Card>     
+                                </TouchableOpacity>
+                            );
+                        }}
+                    />   
                 </View>
             )}
         </AuthContext.Consumer>
@@ -116,25 +147,6 @@ const styles = StyleSheet.create({
     viewStyle: {
         flex: 1,
         justifyContent: 'center',
-    },
-    headerTextStyle: {
-        fontSize: 20,
-        color: "black",
-        marginVertical: 5,
-    },
-    header2TextStyle: {
-        fontSize: 16,
-        color: "black",
-        marginVertical: 5,
-    },
-    DisplayImage: {
-        margin: 20,
-        justifyContent: "space-evenly",
-        alignSelf: "center",
-        width: 240,
-        height: 320,
-        borderColor: "#00C6FF",
-        borderWidth: 2,
     },
 });
 

@@ -9,7 +9,7 @@ const HomeTab = createMaterialBottomTabNavigator();
 
 const HomeTabScreen = () => {
     return (
-        <HomeTab.Navigator initialRouteName="Home">
+        <HomeTab.Navigator initialRouteName="Home" barStyle={{ backgroundColor: '#1C1C1C' }}>
             <HomeTab.Screen
                 name="Home"
                 component={HomeScreen}
@@ -26,7 +26,8 @@ const HomeTabScreen = () => {
             <HomeTab.Screen
                 name="Notification"
                 component={NotificationScreen}
-                options={{
+                options={
+                    {
                     tabBarLabel: "Notifications",
                     tabBarIcon: ({ focused }) =>
                         focused ? (
@@ -38,7 +39,8 @@ const HomeTabScreen = () => {
                                     color="white"
                                 />
                             ),
-                }}
+                }
+            }
             />
         </HomeTab.Navigator>
     );

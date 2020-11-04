@@ -8,6 +8,9 @@ const NotificationScreen = (props) => {
       {(auth) => (
         <View style={styles.viewStyle}>
           <Header
+            containerStyle={{
+              backgroundColor: '#1c1c1c',
+            }}
             leftComponent={{
               icon: "menu",
               color: "#fff",
@@ -15,7 +18,7 @@ const NotificationScreen = (props) => {
                 props.navigation.toggleDrawer();
               },
             }}
-            centerComponent={{ text: "The Office", style: { color: "#fff" } }}
+            centerComponent={{ text: "Flogger", style: { color: "#fff", fontSize: 20 } }}
             rightComponent={{
               icon: "lock-outline",
               color: "#fff",

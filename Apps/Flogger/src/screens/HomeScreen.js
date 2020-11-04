@@ -70,6 +70,9 @@ const HomeScreen = (props) => {
                 {(auth) => (
                     <View style={styles.viewStyle}>
                         <Header
+                            containerStyle={{
+                                backgroundColor: '#1c1c1c',
+                            }}
                             leftComponent={{
                                 icon: "menu",
                                 color: "#fff",
@@ -77,7 +80,7 @@ const HomeScreen = (props) => {
                                     props.navigation.toggleDrawer();
                                 },
                             }}
-                            centerComponent={{ text: "The Office", style: { color: "#fff" } }}
+                            centerComponent={{ text: "Flogger", style: { color: "#fff" , fontSize: 20} }}
                             rightComponent={{
                                 icon: "lock-outline",
                                 color: "#fff",
@@ -95,7 +98,9 @@ const HomeScreen = (props) => {
                                     setInput(currentInput)
                                 }}
                             />
-                            <Button title="Post" type="outline" onPress={function () {
+                            <Button title="Post" type="outline" 
+                            titleStyle={{color: "#1c1c1c"}}
+                            onPress={function () {
                                 if(input == ""){
                                     alert("Filed is Empty!");
                                 }else{

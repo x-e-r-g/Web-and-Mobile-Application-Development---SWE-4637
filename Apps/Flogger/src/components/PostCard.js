@@ -82,10 +82,10 @@ const PostCard = (props) => {
         }}
       >
         <Avatar
-          containerStyle={{ backgroundColor: "#ffab91", marginTop: 10 }}
+          containerStyle={{ backgroundColor: "#1C1C1C", marginTop: 10 }}
           rounded
           size={50}
-          icon={{ name: "user", type: "font-awesome", color: "black" }}
+          icon={{ name: "user", type: "font-awesome", color: "white" }}
           activeOpacity={1}
         />
         <View 
@@ -94,16 +94,16 @@ const PostCard = (props) => {
             paddingHorizontal: 10,
           }}
         >
-          <Text h4>
-            {props.author}
-          </Text>
-          <Text h5> {created_at(props.createdAt)}</Text>
+          <Text h4Style={{fontSize: 20}} h4>{props.author}</Text>
+          <Text h5>{created_at(props.createdAt)}</Text>
         </View>
       </View>
         <Text style={{ fontStyle: "italic" }}> {props.title}</Text>
         <Text
           style={{
-            paddingVertical: 10,
+            padding: 5,
+            marginBottom: 10,
+            fontSize: 18,
           }}
         >
           {props.body}
@@ -111,15 +111,17 @@ const PostCard = (props) => {
       <Card.Divider />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Button
+          titleStyle={{color: "#1c1c1c"}}
           type="outline"
           title= {"Like (" + LikesCount + ")"}
-          icon={<AntDesign name="like2" size={24} color="dodgerblue" />}
+          icon={<AntDesign name="like2" size={24} color="#1c1c1c" />}
           onPress={ function () {
             // getLikes(props.postId);
             addLike(props.postId, user.uid);
           }}
         />
         <Button type="solid" title={"Comments (" + CommentsCount + ")"}
+          buttonStyle={{backgroundColor: "#1c1c1c"}}
           onPress={ function () {
             props.navigation.navigate("Post",{
               postid: props.postId,
