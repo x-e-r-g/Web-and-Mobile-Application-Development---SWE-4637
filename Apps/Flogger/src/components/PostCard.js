@@ -2,9 +2,7 @@ import React, { useState, useEffect} from "react";
 import { View, StyleSheet} from "react-native";
 import { Card, Button, Text, Avatar } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
-
-import PostScreen from "./../screens/PostScreen";
-
+import { format } from 'date-fns';
 import * as firebase from "firebase";
 import "firebase/firestore";
 
@@ -58,6 +56,15 @@ const PostCard = (props) => {
     }
   }
 
+  const created_at = (timestamp) =>{
+    // let dt = Moment(timestamp.miliseconds);
+    // return (<Text> {Moment(dt).format("D, MMM Y, h:mm:ss a")} </Text>)
+    var fromUnixTime = require('date-fns/fromUnixTime');
+    var result = fromUnixTime(timestamp.seconds);
+    var ts = format(result, 'd MMM yyyy h:m a')
+    return ( <Text> {ts} </Text>);
+  }
+
 
   useEffect(() => {
     getLikesCount(props.postId);
@@ -75,23 +82,32 @@ const PostCard = (props) => {
         }}
       >
         <Avatar
-          containerStyle={{ backgroundColor: "#ffab91" }}
+          containerStyle={{ backgroundColor: "#ffab91", marginTop: 10 }}
           rounded
+          size={50}
           icon={{ name: "user", type: "font-awesome", color: "black" }}
           activeOpacity={1}
         />
-        <Text h4Style={{ padding: 10 }} h4>
-          {props.author}
-        </Text>
+        <View 
+          style={{
+            flexDirection: "column",
+            paddingHorizontal: 10,
+          }}
+        >
+          <Text h4>
+            {props.author}
+          </Text>
+          <Text h5> {created_at(props.createdAt)}</Text>
+        </View>
       </View>
-      <Text style={{ fontStyle: "italic" }}> {props.title}</Text>
-      <Text
-        style={{
-          paddingVertical: 10,
-        }}
-      >
-        {props.body}
-      </Text>
+        <Text style={{ fontStyle: "italic" }}> {props.title}</Text>
+        <Text
+          style={{
+            paddingVertical: 10,
+          }}
+        >
+          {props.body}
+        </Text>
       <Card.Divider />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Button

@@ -15,10 +15,14 @@
     "@react-navigation/native": "^5.7.6",
     "@react-navigation/stack": "^5.9.3",
     "apisauce": "^2.0.0",
+    "date-fns": "^2.16.1",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
+    "firebase": "7.9.0",
+    "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-moment": "^1.0.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-gesture-handler": "~1.7.0",
@@ -26,8 +30,7 @@
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
-    "react-native-web": "~0.13.12",
-    "firebase": "7.9.0"
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

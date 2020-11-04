@@ -129,6 +129,7 @@ const HomeScreen = (props) => {
                                             author={item.data.author}
                                             body={item.data.body}
                                             postId={item.id}
+                                            createdAt={item.data.created_at}
                                             navigation={props.navigation}
                                         />
                                     </TouchableOpacity>
