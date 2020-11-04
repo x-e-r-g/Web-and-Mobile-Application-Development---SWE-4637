@@ -11,10 +11,12 @@ const HomeStackScreen = () => {
       <HomeStack.Screen
         name="Home"
         component={HomeTabScreen}
+        options={{ headerShown: false }}
       />
       <HomeStack.Screen
         name="Post"
         component={PostScreen}
+        options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
   );

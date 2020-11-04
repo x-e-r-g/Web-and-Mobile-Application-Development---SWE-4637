@@ -10,7 +10,27 @@ const ProfileScreen = (props) => {
     const user = firebase.auth().currentUser;
 
     const loadProfile = async ()=>{
-        const doc = firebase.firestore().collection('users').doc(user.uid).get().then((doc)=>{
+        const doc = await firebase.firestore().collection('users').doc(user.uid).get().then((doc)=>{
+            setProfile(doc.data());
+            console.log(doc.data());
+        })
+    }
+
+    const deleteProfile = async () => {
+        firebase.firestore().collection("users").doc(user.uid).delete().then(function () {
+            user.delete().then(function () {
+                firebase.auth().signOut().then(() => {
+                }).catch((error) => {
+                    alert(error);
+                });
+            }).catch(function (error) {
+                alert(error);
+            });
+        }).catch(function (error) {
+            console.error("Error removing document: ", error);
+        });
+
+        const doc = await firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
             setProfile(doc.data());
             console.log(doc.data());
         })
@@ -24,19 +44,25 @@ const ProfileScreen = (props) => {
         <AuthContext.Consumer>
             {(auth) => (
                 <View style={styles.viewStyle}>
-                    <Card>
-                        <Card.Divider />
                         <Avatar
+                            containerStyle={styles.avatarStyle}
                             rounded
                             source={{
                                 uri:
                                     'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
                             }}
+                            size={200}
+                            onAccessoryPress={() => Alert.alert("change avatar")}
+                            overlayContainerStyle={{ backgroundColor: "#1C1C1C" }}
+                            showAccessory
+                            accessory={{ containerStyle: { backgroundColor: "#1C1C1C" } }}
                         />
-                        <Text h2>{Profile.name}</Text>
+                        <Card.Divider/>
                         <Text h4>{Profile.name}</Text>
+                        <Text h5>Student ID: {Profile.sid}</Text>
+                        <Text h5>E-Mail: {Profile.email}</Text>
                         <Button
-                            buttonStyle={styles.signupbuttonStyle}
+                            buttonStyle={styles.buttonStyle}
                             titleStyle={styles.textColor}
                             title="Edit Profile"
                             type='clear'
@@ -46,7 +72,19 @@ const ProfileScreen = (props) => {
                                 }
                             }
                         />
-                    </Card>            
+                        <Button
+                            buttonStyle={styles.buttonStyle}
+                            titleStyle={styles.textColor}
+                            title="Delete Profile"
+                            type='clear'
+                            onPress={
+                                function () {
+                                    deleteProfile(auth);
+                                    auth.setIsLoggedIn(false);
+                                    auth.setCurrentUser({});
+                                }
+                            }
+                        />        
                 </View>
             )}
         </AuthContext.Consumer>
@@ -58,29 +96,18 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: "blue",
     },
+    avatarStyle: {
+        alignSelf: "center",
+        margin: 20,
+    },
+    buttonStyle: {
+        margin: 5,
+    },
     viewStyle: {
-        backgroundColor: "#1C1C1C",
+        padding: 30,
+        backgroundColor: "#fff",
         flex: 1,
         justifyContent: 'center',
-    },
-    headerTextStyle: {
-        fontSize: 20,
-        color: "black",
-        marginVertical: 5,
-    },
-    header2TextStyle: {
-        fontSize: 16,
-        color: "black",
-        marginVertical: 5,
-    },
-    DisplayImage: {
-        margin: 20,
-        justifyContent: "space-evenly",
-        alignSelf: "center",
-        width: 240,
-        height: 320,
-        borderColor: "#00C6FF",
-        borderWidth: 2,
     },
 });
 

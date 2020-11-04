@@ -9,6 +9,7 @@ import {
     Card,
     Button,
     Input,
+    Header,
 } from "react-native-elements";
 import PostCard from "./../components/PostCard";
 import HeaderHome from "./../components/HeaderHome";
@@ -18,6 +19,7 @@ import { useNetInfo } from "@react-native-community/netinfo"
 
 import * as firebase from "firebase";
 import "firebase/firestore";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HomeScreen = (props) => {
     // const netinfo = useNetInfo();
@@ -27,10 +29,11 @@ const HomeScreen = (props) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [input, setInput] = useState("");
+    const user = firebase.auth().currentUser;
 
     const loadPosts = async () => {
         setLoading(true);
-        firebase.firestore().collection('posts').orderBy("created_at", "desc").onSnapshot((querySnapshot)=>{
+        await firebase.firestore().collection('posts').orderBy("created_at", "desc").onSnapshot((querySnapshot)=>{
             let temp_posts = []
             querySnapshot.forEach((doc)=>{
                 temp_posts.push({
@@ -40,11 +43,21 @@ const HomeScreen = (props) => {
             });
             setPosts(temp_posts);
             setLoading(false);
-        }).catch((error)=>{
+        }).then().catch((error)=>{
             setLoading(false);
             alert(error);
         });
     };
+
+    const deletePosts = async (post) => {
+        if(post.data.userId == user.uid){
+            await firebase.firestore().collection("posts").doc(post.id).delete().then(()=>{
+                alert("Post deleted successfully!");
+            })
+        }else{
+            alert("You don't have the authority to delete this post!");
+        }
+    }
 
     useEffect(() => {
         loadPosts();
@@ -56,9 +69,22 @@ const HomeScreen = (props) => {
             <AuthContext.Consumer>
                 {(auth) => (
                     <View style={styles.viewStyle}>
-                        <HeaderHome
-                            DrawerFunction={()=>{
-                                props.navigation.toggleDrawer();
+                        <Header
+                            leftComponent={{
+                                icon: "menu",
+                                color: "#fff",
+                                onPress: function () {
+                                    props.navigation.toggleDrawer();
+                                },
+                            }}
+                            centerComponent={{ text: "The Office", style: { color: "#fff" } }}
+                            rightComponent={{
+                                icon: "lock-outline",
+                                color: "#fff",
+                                onPress: function () {
+                                    auth.setIsLoggedIn(false);
+                                    auth.setCurrentUser({});
+                                },
                             }}
                         />
                         <Card>
@@ -96,12 +122,16 @@ const HomeScreen = (props) => {
                             data={posts}
                             renderItem={function ({ item }) {
                                 return (
-                                    <PostCard
-                                        author={item.data.author}
-                                        body={item.data.body}
-                                        postId={item.id}
-                                        navigation={props.navigation}
-                                    />
+                                    <TouchableOpacity onLongPress={ ()=> {
+                                        deletePosts(item);
+                                    }}>
+                                        <PostCard
+                                            author={item.data.author}
+                                            body={item.data.body}
+                                            postId={item.id}
+                                            navigation={props.navigation}
+                                        />
+                                    </TouchableOpacity>
                                 );
                             }}
                         />
