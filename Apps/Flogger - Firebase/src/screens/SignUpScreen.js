@@ -67,8 +67,7 @@ const SignUpScreen = (props) => {
                                             sid: SID,
                                             email: Email,
                                         }).then(()=>{
-                                            alert("Account created successfully!");
-                                            console.log(userCreds.user);
+                                            alert(userCreds.user.uid);
                                             props.navigation.navigate("SignIn");
                                         }).catch((error)=>{
                                             alert(error);
